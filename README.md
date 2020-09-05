@@ -16,7 +16,7 @@ order line details it's recommended you check the order through the API.
 
 ## Installation
 
-- Download the `.jar` file in [releases](https://github.com/jhanda/OrderLineDetail/releases/tag/1.0.0) and deploy it into Liferay.
+- Download the `.jar` file in [releases](https://github.com/jhanda/OrderItemDetail/releases/tag/1.0.0) and deploy it into Liferay.
 
 or
 
