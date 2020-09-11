@@ -12,16 +12,11 @@
 <%@ page import="com.liferay.commerce.model.CommerceOrder" %>
 <%@ page import="com.liferay.commerce.model.CommerceOrderItem" %>
 <%@ page import="com.liferay.commerce.product.model.CPDefinition" %>
-<%@ page import="com.liferay.portal.kernel.util.Constants" %>
-<%@ page import="com.liferay.portal.kernel.util.HtmlUtil" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.liferay.users.admin.kernel.util.UsersAdminUtil" %>
-<%@ page import="com.liferay.portal.kernel.model.Contact" %>
 <%@ page import="com.liferay.commerce.model.CommerceAddress" %>
-<%@ page import="com.liferay.portal.kernel.util.Validator" %>
-<%@ page import="com.liferay.portal.kernel.util.StringPool" %>
-<%@ page import="java.util.ArrayList" %>
-
+<%@ page import="java.util.Calendar" %>
+<%@ page import="com.liferay.portal.kernel.util.*" %>
+<%@ page import="java.util.Date" %>
 
 <liferay-frontend:defineObjects />
 
@@ -33,13 +28,10 @@
 	OrderLineDetailCheckoutStepDisplayContext orderLineDetailCheckoutStepDisplayContext =
 			(OrderLineDetailCheckoutStepDisplayContext)request.getAttribute("orderLineDetailCheckoutStepDisplayContext");
 	CommerceOrder commerceOrder = orderLineDetailCheckoutStepDisplayContext.getCommerceOrder();
-	long commerceOrderShippingAddressId = commerceOrder.getShippingAddressId();
 	List<CommerceOrderItem> commerceOrderItems = commerceOrder.getCommerceOrderItems();
 	List<CommerceAddress> commerceAddresses = orderLineDetailCheckoutStepDisplayContext.getCommerceAddresses();
 
 %>
-
-
 
 <portlet:actionURL name="saveOrderLineItemDetails" var="saveOrderLineItemDetailsActionURL"/>
 
@@ -47,13 +39,12 @@
 
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
 
-	<div class="commerce-checkout-summary-body" id="<portlet:namespace />entriesContainer">
 	<liferay-ui:search-container
 			cssClass="list-group-flush"
 			id="commerceOrderItems"
 	>
 		<liferay-ui:search-container-results
-				results="<%= commerceOrder.getCommerceOrderItems() %>"
+				results="<%= commerceOrderItems %>"
 		/>
 
 		<liferay-ui:search-container-row
@@ -65,9 +56,23 @@
 
 			<%
 				CPDefinition cpDefinition = commerceOrderItem.getCPDefinition();
+				Date requestedDeliveryDate = commerceOrderItem.getRequestedDeliveryDate();
+
 				String quantityFormFieldName = Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-quantity";
 				String addressFormFieldName = Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-address";
 				String dateFormFieldName = Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-date";
+
+				int requestedDeliveryDay = 0;
+				int requestedDeliveryMonth = -1;
+				int requestedDeliveryYear = 0;
+
+				if (requestedDeliveryDate != null) {
+					Calendar calendar = CalendarFactoryUtil.getCalendar(requestedDeliveryDate.getTime());
+
+					requestedDeliveryDay = calendar.get(Calendar.DAY_OF_MONTH);
+					requestedDeliveryMonth = calendar.get(Calendar.MONTH);
+					requestedDeliveryYear = calendar.get(Calendar.YEAR);
+				}
 			%>
 
 			<liferay-ui:search-container-column-image
@@ -77,14 +82,11 @@
 			/>
 
 			<liferay-ui:search-container-column-text
-					cssClass="autofit-col-expand"
+					cssClass="autofit-col-expand list-group-title"
 					name="product"
 			>
-				<div class="description-section">
-					<div class="list-group-title">
 						<%= HtmlUtil.escape(cpDefinition.getName(themeDisplay.getLanguageId())) %>
-					</div>
-				</div>
+
 			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
@@ -125,20 +127,27 @@
 						%>
 
 					</aui:select>
-<%--				</c:if>--%>
 
 			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
 					name="requested-delivery-date"
 			>
+				<div class="form-group input-select-wrapper">
 
-				<aui:input label=""
-						   bean="<%= commerceOrderItem %>"
-						   model="<%= CommerceOrderItem.class %>"
-						   name="requestedDeliveryDate"
-						   value="<%= commerceOrderItem.getRequestedDeliveryDate() %>"  />
-
+					<liferay-ui:input-date
+							dayParam="requestedDeliveryDateDay"
+							dayValue="<%= requestedDeliveryDay %>"
+							disabled="<%= false %>"
+							monthParam="requestedDeliveryDateMonth"
+							monthValue="<%= requestedDeliveryMonth %>"
+							name="<%= dateFormFieldName%>"
+							nullable="<%= true %>"
+							showDisableCheckbox="<%= false %>"
+							yearParam="requestedDeliveryDateYear"
+							yearValue="<%= requestedDeliveryYear %>"
+					/>
+				</div>
 			</liferay-ui:search-container-column-text>
 
 		</liferay-ui:search-container-row>
@@ -148,8 +157,8 @@
 				markupView="lexicon"
 				paginate="<%= false %>"
 		/>
+
 	</liferay-ui:search-container>
 
 </aui:form>
-</div>
 
