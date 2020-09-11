@@ -1,14 +1,14 @@
-# Quick Order Widget
+# Order Item Detail Widget
 
-![Freelancer](doc/preview.png
+![Freelancer](doc/preview.gif
 )
 
 ## Usage
 
-This module allows you to update several details on individual order line items during checkout.  These fields are part
+This module allows you to update several details on individual order items during checkout.  These fields are part
 of the Commerce data model, but are not exposed through the standard UI.  This widget adds a new checkout step and 
 persists any data entered, however it does not update the Order Summary or Order Confirmation screens so to confirm the 
-order line details it's recommended you check the order through the API.       
+order line details it's recommended you check the order through the REST API.       
 
 ## Requirements
 
