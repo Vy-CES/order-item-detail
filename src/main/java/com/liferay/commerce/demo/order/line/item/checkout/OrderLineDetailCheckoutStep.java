@@ -81,13 +81,13 @@ public class OrderLineDetailCheckoutStep extends BaseCommerceCheckoutStep {
 			int quantity = ParamUtil.getInteger(actionRequest, Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-quantity");
 			long shipToAddressId = ParamUtil.getLong(actionRequest, Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-address");
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-			Date requestedDate = ParamUtil.getDate(actionRequest, Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-date", df);
+			Date requestedDeliveryDate = ParamUtil.getDate(actionRequest, Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-date", df);
 
 			commerceOrderItem.setQuantity(quantity);
 			if (commerceOrder.getShippingAddressId() != shipToAddressId){
 				commerceOrderItem.setShippingAddressId(shipToAddressId);
 			}
-
+			commerceOrderItem.setRequestedDeliveryDate(requestedDeliveryDate);
 			_commerceOrderItemLocalService.updateCommerceOrderItem(commerceOrderItem);
 		}
 	}
