@@ -14,19 +14,16 @@ import com.liferay.commerce.util.BaseCommerceCheckoutStep;
 import com.liferay.commerce.util.CommerceCheckoutStep;
 import com.liferay.frontend.taglib.servlet.taglib.util.JSPRenderer;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
-import com.liferay.portal.kernel.util.Validator;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,7 +32,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * @author jhanda
+ * @author Jeff Handa
  */
 @Component(
 	immediate = true,
