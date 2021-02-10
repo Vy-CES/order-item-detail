@@ -1,4 +1,4 @@
-# Order Item Detail Widget
+# Order Item Detail Checkout Step
 
 ![Freelancer](doc/preview.gif
 )
@@ -12,11 +12,11 @@ order line details it's recommended you check the order through the REST API.
 
 ## Requirements
 
-- Liferay Commerce 2.1.2
+- Liferay Commerce 3.0.0
 
 ## Installation
 
-- Download the `.jar` file in [releases](https://github.com/jhanda/OrderItemDetail/releases/tag/1.0.0) and deploy it into Liferay.
+- Download the `.jar` file in [releases](https://github.com/jhanda/order-item-detail/releases/tag/1.0.1) and deploy it into Liferay.
 
 or
 
