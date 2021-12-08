@@ -17,6 +17,8 @@
 <%@ page import="java.util.Calendar" %>
 <%@ page import="com.liferay.portal.kernel.util.*" %>
 <%@ page import="java.util.Date" %>
+<%@ page import="com.liferay.commerce.inventory.model.CommerceInventoryWarehouse" %>
+<%@ page import="com.liferay.commerce.demo.order.line.item.checkout.constants.OrderLineDetailCheckoutStepConstants" %>
 
 <liferay-frontend:defineObjects />
 
@@ -30,7 +32,7 @@
 	CommerceOrder commerceOrder = orderLineDetailCheckoutStepDisplayContext.getCommerceOrder();
 	List<CommerceOrderItem> commerceOrderItems = commerceOrder.getCommerceOrderItems();
 	List<CommerceAddress> commerceAddresses = orderLineDetailCheckoutStepDisplayContext.getCommerceAddresses();
-
+	List<CommerceInventoryWarehouse> commerceInventoryWarehouses = orderLineDetailCheckoutStepDisplayContext.getCommerceInventoryWarehouses();
 %>
 
 <portlet:actionURL name="saveOrderLineItemDetails" var="saveOrderLineItemDetailsActionURL"/>
@@ -61,6 +63,9 @@
 				String quantityFormFieldName = Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-quantity";
 				String addressFormFieldName = Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-address";
 				String dateFormFieldName = Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-date";
+				String warehouseFormFieldName = Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-warehouse";
+
+				long preferredWarehouseId = GetterUtil.getLong(commerceOrderItem.getExpandoBridge().getAttribute(OrderLineDetailCheckoutStepConstants.WAREHOUSE));
 
 				int requestedDeliveryDay = 0;
 				int requestedDeliveryMonth = -1;
@@ -110,11 +115,8 @@
 						<aui:option label="use-order-address" value="0" />
 
 						<%
-
-
 							for (CommerceAddress commerceAddress : commerceAddresses) {
 								boolean selectedAddress = commerceOrderItem.getShippingAddressId() == commerceAddress.getCommerceAddressId();
-
 						%>
 
 						<aui:option data-name="<%= HtmlUtil.escapeAttribute(commerceAddress.getName()) %>"
@@ -127,6 +129,31 @@
 						%>
 
 					</aui:select>
+
+			</liferay-ui:search-container-column-text>
+
+			<liferay-ui:search-container-column-text
+					name="preferred-warehouse"
+			>
+				<aui:select  label=""  name="<%= warehouseFormFieldName %>" >
+					<aui:option label="use-assigned-warehouse" value="0" />
+
+					<%
+						for (CommerceInventoryWarehouse commerceInventoryWarehouse : commerceInventoryWarehouses) {
+							boolean selectedWarehouse = preferredWarehouseId == commerceInventoryWarehouse.getCommerceInventoryWarehouseId();
+
+					%>
+
+					<aui:option data-name="<%= HtmlUtil.escapeAttribute(commerceInventoryWarehouse.getName()) %>"
+								label="<%= commerceInventoryWarehouse.getName() %>"
+								selected="<%= selectedWarehouse %>"
+								value="<%= commerceInventoryWarehouse.getCommerceInventoryWarehouseId() %>" />
+
+					<%
+						}
+					%>
+
+				</aui:select>
 
 			</liferay-ui:search-container-column-text>
 

@@ -1,7 +1,10 @@
 package com.liferay.commerce.demo.order.line.item.checkout;
 
 import com.liferay.commerce.constants.CommerceCheckoutWebKeys;
+import com.liferay.commerce.demo.order.line.item.checkout.constants.OrderLineDetailCheckoutStepConstants;
 import com.liferay.commerce.demo.order.line.item.checkout.display.context.OrderLineDetailCheckoutStepDisplayContext;
+import com.liferay.commerce.inventory.model.CommerceInventoryWarehouse;
+import com.liferay.commerce.inventory.service.CommerceInventoryWarehouseService;
 import com.liferay.commerce.model.CommerceOrder;
 import com.liferay.commerce.model.CommerceOrderItem;
 import com.liferay.commerce.order.CommerceOrderHttpHelper;
@@ -77,9 +80,11 @@ public class OrderLineDetailCheckoutStep extends BaseCommerceCheckoutStep {
 		for (CommerceOrderItem commerceOrderItem: commerceOrderItems){
 			int quantity = ParamUtil.getInteger(actionRequest, Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-quantity");
 			long shipToAddressId = ParamUtil.getLong(actionRequest, Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-address");
+			Long warehouseId = ParamUtil.getLong(actionRequest, Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-warehouse");
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			Date requestedDeliveryDate = ParamUtil.getDate(actionRequest, Long.toString(commerceOrderItem.getCommerceOrderItemId()) + "-date", df);
 
+			commerceOrderItem.getExpandoBridge().setAttribute(OrderLineDetailCheckoutStepConstants.WAREHOUSE, warehouseId.toString());
 			commerceOrderItem.setQuantity(quantity);
 			if (commerceOrder.getShippingAddressId() != shipToAddressId){
 				commerceOrderItem.setShippingAddressId(shipToAddressId);
@@ -93,7 +98,7 @@ public class OrderLineDetailCheckoutStep extends BaseCommerceCheckoutStep {
 	public void render(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
 
 		OrderLineDetailCheckoutStepDisplayContext orderLineDetailCheckoutStepDisplayContext =
-				new OrderLineDetailCheckoutStepDisplayContext(_commerceAddressLocalService, _commerceChannelLocalService, _commerceOptionValueHelper,
+				new OrderLineDetailCheckoutStepDisplayContext(_commerceAddressLocalService, _commerceChannelLocalService, _commerceInventoryWarehouseService, _commerceOptionValueHelper,
 						_commerceOrderHttpHelper, _cpInstanceHelper, httpServletRequest);
 
 		httpServletRequest.setAttribute("orderLineDetailCheckoutStepDisplayContext", orderLineDetailCheckoutStepDisplayContext);
@@ -128,4 +133,7 @@ public class OrderLineDetailCheckoutStep extends BaseCommerceCheckoutStep {
 
 	@Reference
 	private CPInstanceHelper _cpInstanceHelper;
+
+	@Reference
+	private CommerceInventoryWarehouseService _commerceInventoryWarehouseService;
 }

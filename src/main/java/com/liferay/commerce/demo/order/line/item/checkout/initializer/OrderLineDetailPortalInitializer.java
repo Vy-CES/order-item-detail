@@ -10,7 +10,6 @@ import com.liferay.expando.kernel.model.ExpandoTable;
 import com.liferay.expando.kernel.service.ExpandoColumnLocalService;
 import com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil;
 import com.liferay.expando.kernel.service.ExpandoTableLocalService;
-import com.liferay.portal.kernel.dao.orm.Order;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -41,7 +40,8 @@ public class OrderLineDetailPortalInitializer {
 
         for (Company company : companies) {
             try {
-                _addExpandoColumns(company.getCompanyId());
+                _addOrderLineDetailExpandoColumn(company.getCompanyId(), OrderLineDetailCheckoutStepConstants.ORDER_LINE_DETAIL);
+                _addOrderLineDetailExpandoColumn(company.getCompanyId(), OrderLineDetailCheckoutStepConstants.WAREHOUSE);
             }
             catch (PortalException e) {
                 //_log.error(e.getMessage(), e);
@@ -49,7 +49,7 @@ public class OrderLineDetailPortalInitializer {
         }
     }
 
-    private void _addExpandoColumns(long companyId) throws PortalException{
+    private void _addOrderLineDetailExpandoColumn(long companyId, String customFieldName) throws PortalException{
 
         ExpandoTable table = null;
         try {
@@ -66,7 +66,7 @@ public class OrderLineDetailPortalInitializer {
 
         try {
             column = _expandoColumnLocalService.addColumn(
-                    tableId, OrderLineDetailCheckoutStepConstants.ORDER_LINE_DETAIL,
+                    tableId, customFieldName,
                     ExpandoColumnConstants.STRING);
 
             UnicodeProperties properties = new UnicodeProperties();
