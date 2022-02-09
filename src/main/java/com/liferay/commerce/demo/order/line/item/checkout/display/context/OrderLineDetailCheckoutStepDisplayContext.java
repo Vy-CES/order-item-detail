@@ -38,8 +38,9 @@ public class OrderLineDetailCheckoutStepDisplayContext {
             CommerceOrderItem commerceOrderItem)
             throws Exception {
 
-        return _cpInstanceHelper.getCPInstanceThumbnailSrc(
+        return _cpInstanceHelper.getCPInstanceThumbnailSrc(commerceOrderItem.getCommerceOrder().getCommerceAccountId(),
                 commerceOrderItem.getCPInstanceId());
+
     }
 
     public CommerceOrder getCommerceOrder(){
